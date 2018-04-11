@@ -1,0 +1,10 @@
+.default-container {
+	width: 60%;
+	min-height: 100%;
+	padding-top: 10rem;
+}
+
+.grid {
+	height: 100%;
+	padding-top: 0;
+}
