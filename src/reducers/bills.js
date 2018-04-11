@@ -6,7 +6,6 @@ let id = 0;
 const initialItems = [];
 
 const bills = (state = initialItems, action) => {
-
 	switch(action.type) {
 		case BillActionTypes.ADD_BILL:
 			const newBills = state.map(bill => Object.assign({}, bill));
@@ -16,7 +15,7 @@ const bills = (state = initialItems, action) => {
 
 			return newBills;
 		case BillActionTypes.DELETE_BILL:
-			return state.filter((item, index) => index === action.index);
+			return state.filter(item => item.id !== action.item);
 
 		default:
 			return state;

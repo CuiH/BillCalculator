@@ -7,17 +7,19 @@ class NewBillForm extends Component {
 		super();
 
 		this.state = {
-			showForm: false,
-			title:    '',
-			date:     '',
-			total:    ''
+			showBasicForm: false,
+			showSubForm:   false,
+			title:         '',
+			date:          '',
+			total:         '',
+			subItems:      []
 		};
 
 		this.submit = this.submit.bind(this);
-		this.input = this.input.bind(this);
+		this.inputBasic = this.inputBasic.bind(this);
 	}
 
-	input(event) {
+	inputBasic(event) {
 		const value = event.target.value;
 
 		switch (event.target.name) {
@@ -48,42 +50,53 @@ class NewBillForm extends Component {
 		});
 
 		this.setState({
-			showForm: false,
-			title:    '',
-			date:     '',
-			total:    ''
+			showBasicForm: false,
+			showSubForm:   false,
+			title:         '',
+			date:          '',
+			total:         '',
+			subItems:      []
 		});
 	}
 
 	render() {
-		return this.state.showForm ? (
+		return this.state.showBasicForm ? (
 			<form onSubmit={this.submit} className="ui form">
 				<div className="ui stacked segment">
+					<h4 className="ui dividing header">Basic information</h4>
+
 					<div className="field">
 						<label>Title</label>
-						<input type="text" name="title" value={this.state.title} onChange={this.input} required />
+						<input type="text" name="title" value={this.state.title} onChange={this.inputBasic} required />
 					</div>
 
 					<div className="two fields">
 						<div className="field">
 							<label>Date</label>
-							<input type="date" name="date" value={this.state.date} onChange={this.input} required />
+							<input type="date" name="date" value={this.state.date} onChange={this.inputBasic} required />
 						</div>
 						<div className="field">
 							<label>Total</label>
-							<input type="text" name="total" pattern="\d+(.\d+)?" onChange={this.input} value={this.state.total} required />
+							<input type="text" name="total" pattern="\d+(.\d+)?" onChange={this.inputBasic} value={this.state.total} required />
 						</div>
 					</div>
 
+					<h4 className="ui dividing header">Sub items <a onClick={() => this.setState({ showSubForm: true })} className="add-sub-btn">add</a></h4>
+
+					<div className="ui message">
+						<p>No sub item.</p>
+					</div>
+
 					<div className="ui fluid buttons">
-						<button onClick={() => this.setState({ showForm: false })} className="ui button">Cancel</button>
+						<button onClick={() => this.setState({ showBasicForm: false })} className="ui button">Cancel</button>
 						<div className="or" />
 						<button className="ui positive button">OK</button>
 					</div>
+
 				</div>
 			</form>
 		) : (
-			<button onClick={() => this.setState({ showForm: true })} className="ui fluid large teal button">Add bill</button>
+			<button onClick={() => this.setState({ showBasicForm: true })} className="ui fluid large teal button">Add bill</button>
 		);
 	}
 

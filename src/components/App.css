@@ -8,3 +8,8 @@
 	height: 100%;
 	padding-top: 0;
 }
+
+.add-sub-btn {
+	margin-left: 0.5rem;
+	cursor: pointer;
+}
