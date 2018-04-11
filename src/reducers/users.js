@@ -6,8 +6,6 @@ let id = 0;
 const initialItems = [];
 
 const users = (state = initialItems, action) => {
-	console.log(action);
-
 	switch(action.type) {
 		case UserActionTypes.ADD_USER:
 			const newUsers = state.map(user => Object.assign({}, user));

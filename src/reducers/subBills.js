@@ -15,7 +15,10 @@ const subBills = (state = initialItems, action) => {
 
 			return newSubBills;
 		case SubBillActionTypes.DELETE_SUB_BILL:
-			return state.filter((item, index) => index === action.index);
+			return state.filter(item => item.id === action.item);
+
+		case SubBillActionTypes.DELETE_ALL_SUB_BILLS:
+			return [];
 
 		default:
 			return state;

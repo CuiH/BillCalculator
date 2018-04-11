@@ -14,3 +14,10 @@ export const addSubBill = item => {
 		item
 	}
 };
+
+export const deleteAllSubBills = item => {
+	return {
+		type: SubBillActionTypes.DELETE_ALL_SUB_BILLS,
+		item
+	}
+};

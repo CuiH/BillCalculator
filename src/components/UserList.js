@@ -3,26 +3,17 @@ import React, { Component } from 'react';
 
 class UserList extends Component {
 
-	constructor() {
-		super();
-
-		this.state = { message: '' };
-	}
-
-	tryRemovingUser(index) {
-		if (this.props.bills.find(bill =>
-				bill.subItems.find(item =>
-						item.userIndex === index)))
-			this.setState({ message: 'This user has been assigned item(s).' });
-		else
-			this.props.deleteUser(index);
+	tryRemovingUser(id) {
+		if (!this.props.bills.find(bill =>
+				bill.payer.id === id || bill.subBills.find(subBill => subBill.user.id === id)))
+			this.props.deleteUser(id);
 	}
 
 	render() {
 		return this.props.users.length !== 0 ? (
 			<div className="ui middle aligned divided list">
 				{this.props.users.map(user => (
-					<div key={user.id} className="ui image label">
+					<div key={user.id} className="ui large label">
 						{user.name}<i onClick={() => this.tryRemovingUser(user.id)} className="delete icon" />
 					</div>
 				))}

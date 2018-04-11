@@ -8,6 +8,10 @@ class SubBillActionTypes {
 		return 'DELETE_SUB_BILL';
 	}
 
+	static get DELETE_ALL_SUB_BILLS() {
+		return 'DELETE_ALL_SUB_BILLS';
+	}
+
 }
 
 

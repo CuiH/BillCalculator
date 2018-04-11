@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { Dropdown } from 'semantic-ui-react'
+
+import SubBillList from './SubBillList';
+import NewSubBillForm from './NewSubBillForm';
 
 
 class NewBillForm extends Component {
@@ -7,19 +11,36 @@ class NewBillForm extends Component {
 		super();
 
 		this.state = {
-			showBasicForm: false,
-			showSubForm:   false,
-			title:         '',
-			date:          '',
-			total:         '',
-			subItems:      []
+			showForm: false,
+			title:    '',
+			date:     '',
+			total:    '',
+			message:  ''
 		};
 
+		this.selectedUser = null;
+
 		this.submit = this.submit.bind(this);
-		this.inputBasic = this.inputBasic.bind(this);
+		this.input = this.input.bind(this);
+		this.clear = this.clear.bind(this);
+		this.select = this.select.bind(this);
 	}
 
-	inputBasic(event) {
+	clear() {
+		this.setState({
+			showForm: false,
+			title:    '',
+			date:     '',
+			total:    '',
+			message:  ''
+		});
+
+		this.selectedUser = null;
+
+		this.props.deleteAllSubBills();
+	}
+
+	input(event) {
 		const value = event.target.value;
 
 		switch (event.target.name) {
@@ -40,55 +61,78 @@ class NewBillForm extends Component {
 		}
 	}
 
+	select(event, data) {
+		this.selectedUser = this.props.users.find(user => user.id === data.value);
+	}
+
 	submit(event) {
 		event.preventDefault();
 
+		if (!this.selectedUser) return this.setState({ message: 'Please select a user.' });
+
 		this.props.addBill({
-			title: this.state.title,
-			date:  this.state.date,
-			total: this.state.total
+			title:    this.state.title,
+			date:     this.state.date,
+			total:    this.state.total,
+			subBills: this.props.subBills,
+			payer:    {
+				name: this.selectedUser.name,
+				id:   this.selectedUser.id
+			}
 		});
 
-		this.setState({
-			showBasicForm: false,
-			showSubForm:   false,
-			title:         '',
-			date:          '',
-			total:         '',
-			subItems:      []
-		});
+		this.clear();
 	}
 
 	render() {
-		return this.state.showBasicForm ? (
+		const users = this.props.users.map(user => ({
+			text:  user.name,
+			value: user.id
+		}));
+
+		return this.state.showForm ? (
 			<form onSubmit={this.submit} className="ui form">
+				{this.state.message ? <div className="ui red message">{this.state.message}</div> : null}
+
 				<div className="ui stacked segment">
 					<h4 className="ui dividing header">Basic information</h4>
 
-					<div className="field">
-						<label>Title</label>
-						<input type="text" name="title" value={this.state.title} onChange={this.inputBasic} required />
+					<div className="two fields">
+						<div className="field">
+							<label>Title</label>
+							<input type="text" name="title" value={this.state.title} onChange={this.input} required />
+						</div>
+						<div className="field">
+							<label>Payer</label>
+							<Dropdown onChange={this.select} placeholder='Select user' fluid selection options={users} />
+						</div>
 					</div>
 
 					<div className="two fields">
 						<div className="field">
 							<label>Date</label>
-							<input type="date" name="date" value={this.state.date} onChange={this.inputBasic} required />
+							<input type="date" name="date" value={this.state.date} onChange={this.input} required />
 						</div>
 						<div className="field">
 							<label>Total</label>
-							<input type="text" name="total" pattern="\d+(.\d+)?" onChange={this.inputBasic} value={this.state.total} required />
+							<input type="text" name="total" pattern="\d+(.\d+)?" value={this.state.total} onChange={this.input} required />
 						</div>
 					</div>
 
-					<h4 className="ui dividing header">Sub items <a onClick={() => this.setState({ showSubForm: true })} className="add-sub-btn">add</a></h4>
+					<h4 className="ui dividing header">
+						Sub bills
 
-					<div className="ui message">
-						<p>No sub item.</p>
-					</div>
+						<NewSubBillForm
+							users={this.props.users}
+							addSubBill={this.props.addSubBill} />
+					</h4>
+
+					<SubBillList
+						subBills={this.props.subBills}
+						deleteSubBill={this.props.deleteSubBill} />
 
 					<div className="ui fluid buttons">
-						<button onClick={() => this.setState({ showBasicForm: false })} className="ui button">Cancel</button>
+						<div onClick={this.clear} className="ui button">Cancel</div>
 						<div className="or" />
 						<button className="ui positive button">OK</button>
 					</div>
@@ -96,7 +140,7 @@ class NewBillForm extends Component {
 				</div>
 			</form>
 		) : (
-			<button onClick={() => this.setState({ showBasicForm: true })} className="ui fluid large teal button">Add bill</button>
+			<button onClick={() => this.setState({ showForm: true })} className="ui fluid large teal button"><i className="icon money bill alternate" />Add bill</button>
 		);
 	}
 

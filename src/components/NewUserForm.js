@@ -13,6 +13,14 @@ class NewUserForm extends Component {
 
 		this.submit = this.submit.bind(this);
 		this.input = this.input.bind(this);
+		this.clear = this.clear.bind(this);
+	}
+
+	clear() {
+		this.setState({
+			showForm: false,
+			name:     ''
+		});
 	}
 
 	input(event) {
@@ -24,12 +32,11 @@ class NewUserForm extends Component {
 	submit(event) {
 		event.preventDefault();
 
-		this.props.addUser({ name: this.state.name });
+		if (!this.props.users.find(user => user.name === this.state.name)) {
+			this.props.addUser({ name: this.state.name });
 
-		this.setState({
-			showForm: false,
-			name:     ''
-		});
+			this.clear();
+		}
 	}
 
 	render() {
@@ -42,7 +49,7 @@ class NewUserForm extends Component {
 					</div>
 
 					<div className="ui fluid buttons">
-						<button onClick={() => this.setState({ showForm: false })} className="ui button">Cancel</button>
+						<div onClick={this.clear} className="ui button">Cancel</div>
 						<div className="or" />
 						<button className="ui positive button">OK</button>
 					</div>
@@ -50,7 +57,7 @@ class NewUserForm extends Component {
 				</div>
 			</form>
 		) : (
-			<button onClick={() => this.setState({ showForm: true })} className="ui fluid large teal button">Add user</button>
+			<button onClick={() => this.setState({ showForm: true })} className="ui fluid large teal button"><i className="icon user" />Add user</button>
 		);
 	}
 

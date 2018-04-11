@@ -9,7 +9,15 @@
 	padding-top: 0;
 }
 
+.pull-middle {
+	margin: 0 auto;
+}
+
+.move-inline {
+	display: inline-block;
+}
+
 .add-sub-btn {
-	margin-left: 0.5rem;
+	margin-left: 0.7rem;
 	cursor: pointer;
 }

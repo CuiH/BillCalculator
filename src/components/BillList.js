@@ -14,11 +14,21 @@ class BillList extends Component {
 							</div>
 							<div className="content">
 								<div className="header">{bill.title}, {bill.date}</div>
-								{bill.total}
+								${bill.total}
 							</div>
+
+							{bill.subBills ? (
+								<div className="list">
+									{bill.subBills.map(subBill => (
+										<div key={subBill.id} className="item">
+											<div className="header">{subBill.title}</div>
+											{subBill.user.name}, ${subBill.amount}
+										</div>
+									))}
+								</div>
+							): null}
 						</div>
 					))}
-
 				</div>
 			) : (
 				<div className="ui message">
