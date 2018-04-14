@@ -17,11 +17,11 @@
 	display: inline-block;
 }
 
+.add-margin-bottom {
+	margin-bottom: 1rem !important;
+}
+
 .add-sub-btn {
 	margin-left: 0.7rem;
 	cursor: pointer;
-}
-
-.add-margin-bottom {
-	margin-bottom: 1rem !important;
 }
