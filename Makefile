@@ -2,7 +2,7 @@ deploy:
 	rm -r ~/tmp/build
 	git checkout master
 	npm install
-	npm build
+	npm run build
 	git add --all
 	git commit -m "update source"
 	cp -r build/ ~/tmp/
