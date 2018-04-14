@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { Dropdown, Modal } from 'semantic-ui-react'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import * as subBillActions from '../actions/subBillActions';
 
 
 class NewSubBillForm extends Component {
@@ -34,7 +38,7 @@ class NewSubBillForm extends Component {
 	}
 
 	select(event, data) {
-		this.selectedUser = this.props.users.find(user => user.id === data.value);
+		this.selectedUser = data.value;
 	}
 
 	input(event) {
@@ -59,13 +63,10 @@ class NewSubBillForm extends Component {
 
 		if (!this.selectedUser) return this.setState({ message: 'Please select a user.' });
 
-		this.props.addSubBill({
+		this.props.actions.addSubBill({
 			title:    this.state.title,
 			amount:   this.state.amount,
-			user:     {
-				name: this.selectedUser.name,
-				id:   this.selectedUser.id
-			}
+			user:     this.selectedUser
 		});
 
 		this.clear();
@@ -73,8 +74,8 @@ class NewSubBillForm extends Component {
 
 	render() {
 		const users = this.props.users.map(user => ({
-			text:  user.name,
-			value: user.id
+			text:  user,
+			value: user
 		}));
 
 		return (
@@ -118,4 +119,8 @@ class NewSubBillForm extends Component {
 }
 
 
-export default NewSubBillForm;
+export default connect(state => ({
+	users:    state.users
+}), dispatch => ({
+	actions: bindActionCreators(subBillActions, dispatch)
+}))(NewSubBillForm);

@@ -13,6 +13,8 @@ const bills = (state = initialItems, action) => {
 			action.item.id = id++;
 			newBills.push(action.item);
 
+			newBills.sort((b1, b2) => b1.date < b2.date ? 0 : 1);
+
 			return newBills;
 		case BillActionTypes.DELETE_BILL:
 			return state.filter(item => item.id !== action.item);

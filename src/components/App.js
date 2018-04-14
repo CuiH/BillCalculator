@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
-import './App.css';
-
-import * as billActions from '../actions/billActions';
-import * as userActions from '../actions/userActions';
-import * as subBillActions from '../actions/subBillActions';
 import NewBillForm from './NewBillForm';
 import BillList from './BillList';
 import UserList from './UserList';
@@ -16,43 +10,43 @@ import BillCalculator from './BillCalculator';
 
 class App extends Component {
 
+	constructor() {
+		super();
+	}
+
+
 	render() {
 		return (
 			<div className="ui container default-container">
 				<div className="ui grid">
 					<div className="row">
-						<div className="eight wide column pull-middle">
-							<UserList
-								bills={this.props.bills}
-								users={this.props.users}
-								deleteUser={this.props.actions.deleteUser} />
+						<div className="seven wide computer sixteen wide mobile column pull-middle">
+							<UserList />
 
-							<NewUserForm
-								users={this.props.users}
-								addUser={this.props.actions.addUser} />
+							<NewUserForm />
+
+
 						</div>
 					</div>
+					<div className="ui divider"></div>
+
 
 					<div className="row">
-						<div className="eight wide column pull-middle">
-							<BillList
-								bills={this.props.bills}
-								deleteBill={this.props.actions.deleteBill} />
+						<div className="seven wide computer sixteen wide mobile column pull-middle">
+							<BillList />
 
-							<NewBillForm
-								users={this.props.users}
-								subBills={this.props.subBills}
-								addBill={this.props.actions.addBill}
-								addSubBill={this.props.actions.addSubBill}
-								deleteSubBill={this.props.actions.deleteSubBill}
-								deleteAllSubBills={this.props.actions.deleteAllSubBills} />
+							<NewBillForm />
 						</div>
 					</div>
 
 					{this.props.bills.length > 0 ? (
+						<div className="ui divider"></div>
+					) : null}
+
+					{this.props.bills.length > 0 ? (
 						<div className="row">
-							<div className="eight wide column pull-middle">
-								<BillCalculator bills={this.props.bills} />
+							<div className="seven wide computer sixteen wide mobile column pull-middle">
+								<BillCalculator />
 							</div>
 						</div>
 					) : null}
@@ -65,9 +59,5 @@ class App extends Component {
 
 
 export default connect(state => ({
-	bills:    state.bills,
-	subBills: state.subBills,
-	users:    state.users
-}), dispatch => ({
-	actions: bindActionCreators(Object.assign({}, billActions, userActions, subBillActions), dispatch)
+	bills: state.bills
 }))(App);

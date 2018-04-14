@@ -1,21 +1,17 @@
 import UserActionTypes from '../constants/UserActionTypes';
 
 
-let id = 0;
-
 const initialItems = [];
 
 const users = (state = initialItems, action) => {
 	switch(action.type) {
 		case UserActionTypes.ADD_USER:
-			const newUsers = state.map(user => Object.assign({}, user));
-
-			action.item.id = id++;
+			const newUsers = state.concat();
 			newUsers.push(action.item);
 
 			return newUsers;
 		case UserActionTypes.DELETE_USER:
-			return state.filter(item => item.id !== action.item);
+			return state.filter(item => item !== action.item);
 
 		default:
 			return state;

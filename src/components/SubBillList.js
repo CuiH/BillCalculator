@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import * as subBillActions from '../actions/subBillActions';
 
 
 class SubBillList extends Component {
@@ -10,11 +14,11 @@ class SubBillList extends Component {
 					{this.props.subBills.map(subBill => (
 						<div className="item" key={subBill.id}>
 							<div className="right floated content">
-								<div onClick={() => this.props.deleteSubBill(subBill.id)} className="ui button">Remove</div>
+								<div onClick={() => this.props.actions.deleteSubBill(subBill.id)} className="ui button">Remove</div>
 							</div>
 							<div className="content">
 								<div className="header">{subBill.title}</div>
-								{subBill.user.name}, ${subBill.amount}
+								${subBill.amount}, {subBill.user}
 							</div>
 						</div>
 					))}
@@ -30,4 +34,8 @@ class SubBillList extends Component {
 }
 
 
-export default SubBillList;
+export default connect(state => ({
+	subBills: state.subBills,
+}), dispatch => ({
+	actions: bindActionCreators(subBillActions, dispatch)
+}))(SubBillList);

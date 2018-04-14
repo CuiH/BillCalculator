@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react'
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import SubBillList from './SubBillList';
 import NewSubBillForm from './NewSubBillForm';
+import * as billActions from '../actions/billActions';
+import * as subBillActions from '../actions/subBillActions';
 
 
 class NewBillForm extends Component {
@@ -37,7 +41,7 @@ class NewBillForm extends Component {
 
 		this.selectedUser = null;
 
-		this.props.deleteAllSubBills();
+		this.props.actions.deleteAllSubBills();
 	}
 
 	input(event) {
@@ -62,23 +66,20 @@ class NewBillForm extends Component {
 	}
 
 	select(event, data) {
-		this.selectedUser = this.props.users.find(user => user.id === data.value);
+		this.selectedUser = data.value;
 	}
 
 	submit(event) {
 		event.preventDefault();
 
-		if (!this.selectedUser) return this.setState({ message: 'Please select a user.' });
+		if (!this.selectedUser) return this.setState({ message: 'Please select a payer.' });
 
-		this.props.addBill({
+		this.props.actions.addBill({
 			title:    this.state.title,
 			date:     this.state.date,
 			total:    this.state.total,
-			subBills: this.props.subBills,
-			payer:    {
-				name: this.selectedUser.name,
-				id:   this.selectedUser.id
-			}
+			subBills: this.props.subBills.map(subBill => Object.assign({}, subBill)),
+			payer:    this.selectedUser
 		});
 
 		this.clear();
@@ -86,15 +87,15 @@ class NewBillForm extends Component {
 
 	render() {
 		const users = this.props.users.map(user => ({
-			text:  user.name,
-			value: user.id
+			text:  user,
+			value: user
 		}));
 
 		return this.state.showForm ? (
 			<form onSubmit={this.submit} className="ui form">
-				{this.state.message ? <div className="ui red message">{this.state.message}</div> : null}
-
 				<div className="ui stacked segment">
+					{this.state.message ? <div className="ui red message">{this.state.message}</div> : null}
+
 					<h4 className="ui dividing header">Basic information</h4>
 
 					<div className="two fields">
@@ -122,14 +123,10 @@ class NewBillForm extends Component {
 					<h4 className="ui dividing header">
 						Sub bills
 
-						<NewSubBillForm
-							users={this.props.users}
-							addSubBill={this.props.addSubBill} />
+						<NewSubBillForm />
 					</h4>
 
-					<SubBillList
-						subBills={this.props.subBills}
-						deleteSubBill={this.props.deleteSubBill} />
+					<SubBillList />
 
 					<div className="ui fluid buttons">
 						<div onClick={this.clear} className="ui button">Cancel</div>
@@ -140,11 +137,16 @@ class NewBillForm extends Component {
 				</div>
 			</form>
 		) : (
-			<button onClick={() => this.setState({ showForm: true })} className="ui fluid large teal button"><i className="icon money bill alternate" />Add bill</button>
+			<button onClick={() => this.setState({ showForm: true })} className="ui fluid teal button"><i className="icon money bill alternate" />Add bill</button>
 		);
 	}
 
 }
 
 
-export default NewBillForm;
+export default connect(state => ({
+	subBills: state.subBills,
+	users:    state.users
+}), dispatch => ({
+	actions: bindActionCreators(Object.assign({}, billActions, subBillActions), dispatch)
+}))(NewBillForm);

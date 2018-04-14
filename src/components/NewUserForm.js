@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import * as userActions from '../actions/userActions';
 
 
 class NewUserForm extends Component {
@@ -32,8 +36,8 @@ class NewUserForm extends Component {
 	submit(event) {
 		event.preventDefault();
 
-		if (!this.props.users.find(user => user.name === this.state.name)) {
-			this.props.addUser({ name: this.state.name });
+		if (!this.props.users.find(user => user === this.state.name)) {
+			this.props.actions.addUser(this.state.name);
 
 			this.clear();
 		}
@@ -57,11 +61,15 @@ class NewUserForm extends Component {
 				</div>
 			</form>
 		) : (
-			<button onClick={() => this.setState({ showForm: true })} className="ui fluid large teal button"><i className="icon user" />Add user</button>
+			<button onClick={() => this.setState({ showForm: true })} className="ui fluid teal button"><i className="icon user" />Add user</button>
 		);
 	}
 
 }
 
 
-export default NewUserForm;
+export default connect(state => ({
+	users:    state.users
+}), dispatch => ({
+	actions: bindActionCreators(userActions, dispatch)
+}))(NewUserForm);
